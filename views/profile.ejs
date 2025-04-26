@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>21 Savage Fan Site</title>
+    <title>Course tracker</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
@@ -36,13 +36,17 @@
             </div>
         </div>
         <div class="col-sm-6">
-          <h3>Messages</h3>
+          <h3>Courses</h3>
           <ul class="messages">
-          <% for(var i=0; i<messages.length; i++) {%>
+          <% for(var i=0; i<courseList.length; i++) {%>
             <li class="message">
-              <span><%= messages[i].name %></span>
-              <span><%= messages[i].msg %></span>
-              <span><%= messages[i].thumbUp %></span>
+              <span><%= courseList[i].userNameDB %></span> 
+              <span><%= courseList[i].courseNameDB %></span> 
+              <span><%= courseList[i].instructorNameDB %></span>
+              <span><%= courseList[i].courseLengthDB %></span>
+              <span><%= courseList[i].notesDB %></span>
+              <span><%= courseList[i].completionStatusDB %></span>
+              <span><%= courseList[i].thumbUpDB %></span>
               <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
               <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
               <span><i class="fa fa-trash-o"></i></span>
@@ -50,11 +54,16 @@
           <% } %>
           </ul>
 
-          <h2>Add a message</h2>
+          <h2>Enter your course</h2>
         <% if (user.local.email) { %>
           <form action="/messages" method="POST">
-            <input type="text" value="<%= user.local.email %>" name="name">
-            <input type="text" placeholder="message" name="msg">
+            <input type="text" placeholder="username" value="<%= user.local.email %>" name="userNameFromForm"> <%# node [1] %>
+            <input type="text" placeholder="course name" name="courseNameFromForm"> <%# node [3] %>
+            <input type="text" placeholder="instructor name" name="instructorNameFromForm"> <%# node [5] %>
+            <input type="number" placeholder="Course length (mins)" name="courseLengthFromForm"> <%# node [7] %>
+            <input type="text" placeholder="Notes" name="notesFromForm"> <%# node [9] %>
+            <label for="completionStatus">Completion status</label>
+            <input type="range" name="completionStatusFromForm" id="completionStatus" min="0" max="10"> <%# node [13] %>
             <button type="submit">Submit</button>
           </form>
         </div>

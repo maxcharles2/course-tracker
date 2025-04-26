@@ -4,16 +4,24 @@ var trash = document.getElementsByClassName("fa-trash-o");
 
 Array.from(thumbUp).forEach(function(element) {
       element.addEventListener('click', function(){
-        const name = this.parentNode.parentNode.childNodes[1].innerText
-        const msg = this.parentNode.parentNode.childNodes[3].innerText
-        const thumbUp = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
+        const userNameVal = this.parentNode.parentNode.childNodes[1].innerText
+        const courseNameVal = this.parentNode.parentNode.childNodes[3].innerText
+        const instructorNameVal = this.parentNode.parentNode.childNodes[5].innerText
+        const courseLengthVal = this.parentNode.parentNode.childNodes[7].innerText
+        const notesVal = this.parentNode.parentNode.childNodes[9].innerText
+        const completionStatusVal = this.parentNode.parentNode.childNodes[11].innerText
+        const thumbUpVal = parseInt(this.parentNode.parentNode.childNodes[13].innerText)
         fetch('upVote', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
-            'name': name,
-            'msg': msg,
-            'thumbUp':thumbUp
+            'userName': userNameVal,
+            'courseName': courseNameVal,
+            'instructorName': instructorNameVal,
+            'courseLength': courseLengthVal,
+            'notes': notesVal,
+            'completionStatus': completionStatusVal,
+            'thumbUp': thumbUpVal
           })
         })
         .then(response => {
@@ -28,16 +36,24 @@ Array.from(thumbUp).forEach(function(element) {
 
 Array.from(thumbDown).forEach(function(element) {
   element.addEventListener('click', function(){
-    const name = this.parentNode.parentNode.childNodes[1].innerText
-    const msg = this.parentNode.parentNode.childNodes[3].innerText
-    const thumbUp = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
+    const userNameVal = this.parentNode.parentNode.childNodes[1].innerText
+    const courseNameVal = this.parentNode.parentNode.childNodes[3].innerText
+    const instructorNameVal = this.parentNode.parentNode.childNodes[5].innerText
+    const courseLengthVal = this.parentNode.parentNode.childNodes[7].innerText
+    const notesVal = this.parentNode.parentNode.childNodes[9].innerText
+    const completionStatusVal = this.parentNode.parentNode.childNodes[11].innerText
+    const thumbUpVal = parseInt(this.parentNode.parentNode.childNodes[13].innerText)
     fetch('downVote', {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        'name': name,
-        'msg': msg,
-        'thumbUp':thumbUp
+        'userName': userNameVal,
+        'courseName': courseNameVal,
+        'instructorName': instructorNameVal,
+        'courseLength': courseLengthVal,
+        'notes': notesVal,
+        'completionStatus': completionStatusVal,
+        'thumbUp': thumbUpVal
       })
     })
     .then(response => {
@@ -52,16 +68,26 @@ Array.from(thumbDown).forEach(function(element) {
 
 Array.from(trash).forEach(function(element) {
       element.addEventListener('click', function(){
-        const name = this.parentNode.parentNode.childNodes[1].innerText
-        const msg = this.parentNode.parentNode.childNodes[3].innerText
+        const userNameVal = this.parentNode.parentNode.childNodes[1].innerText
+        const courseNameVal = this.parentNode.parentNode.childNodes[3].innerText
+        const instructorNameVal = this.parentNode.parentNode.childNodes[5].innerText
+        const courseLengthVal = this.parentNode.parentNode.childNodes[7].innerText
+        const notesVal = this.parentNode.parentNode.childNodes[9].innerText
+        const completionStatusVal = this.parentNode.parentNode.childNodes[11].innerText
+        const thumbUpVal = parseInt(this.parentNode.parentNode.childNodes[13].innerText)
         fetch('messages', {
           method: 'delete',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            'name': name,
-            'msg': msg
+            'userName': userNameVal,
+            'courseName': courseNameVal,
+            'instructorName': instructorNameVal,
+            'courseLength': courseLengthVal,
+            'notes': notesVal,
+            'completionStatus': completionStatusVal,
+            'thumbUp': thumbUpVal
           })
         }).then(function (response) {
           window.location.reload()

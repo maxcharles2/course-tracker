@@ -14,7 +14,7 @@ module.exports = function(app, passport, db) {
           console.log(result);
           res.render('profile.ejs', {
             user : req.user,
-            messages: result
+            courseList: result
           })
         })
     });
@@ -30,7 +30,7 @@ module.exports = function(app, passport, db) {
 // message board routes ===============================================================
 
     app.post('/messages', (req, res) => {
-      db.collection('messages').save({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
+      db.collection('messages').save({userNameDB: req.body.userNameFromForm, courseNameDB: req.body.courseNameFromForm, instructorNameDB: req.body.instructorNameFromForm, courseLengthDB: req.body.courseLengthFromForm, notesDB: req.body.notesFromForm, completionStatusDB: req.body.completionStatusFromForm, thumbUpDB: 0, thumbDownDB:0}, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
         res.redirect('/profile')
@@ -39,13 +39,13 @@ module.exports = function(app, passport, db) {
 
     app.put('/upVote', (req, res) => {
       db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+      .findOneAndUpdate({userNameDB: req.body.userName, courseNameDB: req.body.courseName, instructorNameDB: req.body.instructorName, courseLengthDB: req.body.courseLength, notesDB: req.body.notes, completionStatusDB: req.body.completionStatus}, {
         $set: {
-          thumbUp:req.body.thumbUp + 1
+          thumbUpDB:req.body.thumbUp + 1
         }
       }, {
         sort: {_id: -1},
-        upsert: true
+        upsert: false
       }, (err, result) => {
         if (err) return res.send(err)
         res.send(result)
@@ -54,13 +54,13 @@ module.exports = function(app, passport, db) {
 
     app.put('/downVote', (req, res) => {
       db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+      .findOneAndUpdate({userNameDB: req.body.userName, courseNameDB: req.body.courseName, instructorNameDB: req.body.instructorName, courseLengthDB: req.body.courseLength, notesDB: req.body.notes, completionStatusDB: req.body.completionStatus}, {
         $set: {
-          thumbUp:req.body.thumbUp - 1
+          thumbUpDB:req.body.thumbUp - 1
         }
       }, {
         sort: {_id: -1},
-        upsert: true
+        upsert: false
       }, (err, result) => {
         if (err) return res.send(err)
         res.send(result)
@@ -68,7 +68,7 @@ module.exports = function(app, passport, db) {
     })
 
     app.delete('/messages', (req, res) => {
-      db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
+      db.collection('messages').findOneAndDelete({userNameDB: req.body.userName, courseNameDB: req.body.courseName, instructorNameDB: req.body.instructorName, courseLengthDB: req.body.courseLength, notesDB: req.body.notes, completionStatusDB: req.body.completionStatus, thumbUpDB: parseInt(req.body.thumbUp)}, (err, result) => {
         if (err) return res.send(500, err)
         console.log(result);
         res.send('Message deleted!')
