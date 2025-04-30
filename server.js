@@ -16,6 +16,7 @@ var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
 var configDB = require('./config/database.js'); //importing credentials to access database
+// const dotenv = require('dotenv').config()
 
 var db
 

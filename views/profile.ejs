@@ -10,14 +10,14 @@
 <div class="container">
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <h1 class="white"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path d="M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5l0-377.4c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8L0 454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5l0-370.3c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11L304 456c0 11.4 11.7 19.3 22.4 15.5z"/></svg> Course List Page</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
 
     <div class="row">
 
         <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
+        <!-- <div class="col-sm-6">
             <div class="well">
                 <h3><span class="fa fa-user"></span> Local</h3>
 
@@ -34,38 +34,61 @@
                 <% } %>
 
             </div>
-        </div>
+        </div> -->
         <div class="col-sm-6">
-          <h3>Courses</h3>
-          <ul class="messages">
+          <h3 class="white">Courses</h3> 
+          <%# the nodes are determined here %>
+          <ul class="courseListContainer">
           <% for(var i=0; i<courseList.length; i++) {%>
-            <li class="message">
-              <span><%= courseList[i].userNameDB %></span> 
-              <span><%= courseList[i].courseNameDB %></span> 
-              <span><%= courseList[i].instructorNameDB %></span>
-              <span><%= courseList[i].courseLengthDB %></span>
-              <span><%= courseList[i].notesDB %></span>
-              <span><%= courseList[i].completionStatusDB %></span>
-              <span><%= courseList[i].thumbUpDB %></span>
-              <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-              <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
-              <span><i class="fa fa-trash-o"></i></span>
+            <li class="courseItem" data-id="<%= courseList[i]._id %>">
+              <span class="white userName">User: <%= courseList[i].userNameDB %></span> 
+              <div>
+                <span class="white courseName"><%= courseList[i].courseNameDB %> by</span> 
+                <span class="white instructorName"><%= courseList[i].instructorNameDB %></span>
+              </div>
+              <span class="white courseLength">Course length: <%= courseList[i].courseLengthDB %></span>
+              <span>Notes:</span><span class="white notes"><%= courseList[i].notesDB %></span>
+              <span class="white completionStatus">Completion status: <%= courseList[i].completionStatusDB %></span>
+              <span class="white thumbUp">Total upvotes: <%= courseList[i].thumbUpDB %></span>
+              <div>
+                <div>
+                  <input type="text" placeholder="Change notes" name="updateNotesFromInput" class="newNotesVal">
+                  <button class="updateNotesBtn">Edit</button>
+                </div>
+                <span><i class="fa fa-thumbs-up white" aria-hidden="true"></i></span>
+                <span><i class="fa fa-thumbs-down white" aria-hidden="true"></i></span>
+                <span><i class="fa fa-trash-o white"></i></span>
+              </div>
             </li>
           <% } %>
           </ul>
 
-          <h2>Enter your course</h2>
+          <h2 class="white">Enter your course</h2>
         <% if (user.local.email) { %>
-          <form action="/messages" method="POST">
+          <form action="/messages" method="POST" class="courseListForm">
             <input type="text" placeholder="username" value="<%= user.local.email %>" name="userNameFromForm"> <%# node [1] %>
             <input type="text" placeholder="course name" name="courseNameFromForm"> <%# node [3] %>
             <input type="text" placeholder="instructor name" name="instructorNameFromForm"> <%# node [5] %>
             <input type="number" placeholder="Course length (mins)" name="courseLengthFromForm"> <%# node [7] %>
             <input type="text" placeholder="Notes" name="notesFromForm"> <%# node [9] %>
-            <label for="completionStatus">Completion status</label>
-            <input type="range" name="completionStatusFromForm" id="completionStatus" min="0" max="10"> <%# node [13] %>
+            <label for="completionStatus" class="white">Completion status
+              <input type="range" name="completionStatusFromForm" id="completionStatus" min="0" max="10">
+            </label>
             <button type="submit">Submit</button>
           </form>
+
+          <!-- <div>
+            <h2 class="white">Update your course</h2>
+            <input type="text" placeholder="Change notes" name="updateNotesFromInput" class="newNotesVal">
+            <button class="updateNotesBtn">Submit</button>
+          </div>
+          <div>
+            <label for="completionStatus" class="white"> Change competion status
+              <input type="range" placeholder="Change completion status" name="" id="completionStatus">
+            </label>
+            <button class="updateCompletionStatusBtn">Submit</button>
+          </div> -->
+          
         </div>
         <% } %>
 

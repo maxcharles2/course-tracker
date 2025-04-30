@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb'); //importing objectId so documents can be searched by id
 module.exports = function(app, passport, db) {
 
 // normal routes ===============================================================
@@ -11,7 +12,7 @@ module.exports = function(app, passport, db) {
     app.get('/profile', isLoggedIn, function(req, res) {
         db.collection('messages').find().toArray((err, result) => {
           if (err) return console.log(err)
-          console.log(result);
+          // console.log(result);
           res.render('profile.ejs', {
             user : req.user,
             courseList: result
@@ -30,7 +31,7 @@ module.exports = function(app, passport, db) {
 // message board routes ===============================================================
 
     app.post('/messages', (req, res) => {
-      db.collection('messages').save({userNameDB: req.body.userNameFromForm, courseNameDB: req.body.courseNameFromForm, instructorNameDB: req.body.instructorNameFromForm, courseLengthDB: req.body.courseLengthFromForm, notesDB: req.body.notesFromForm, completionStatusDB: req.body.completionStatusFromForm, thumbUpDB: 0, thumbDownDB:0}, (err, result) => {
+      db.collection('messages').insertOne({userNameDB: req.body.userNameFromForm, courseNameDB: req.body.courseNameFromForm, instructorNameDB: req.body.instructorNameFromForm, courseLengthDB: req.body.courseLengthFromForm, notesDB: req.body.notesFromForm, completionStatusDB: req.body.completionStatusFromForm, thumbUpDB: 0, thumbDownDB:0}, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
         res.redirect('/profile')
@@ -38,10 +39,11 @@ module.exports = function(app, passport, db) {
     })
 
     app.put('/upVote', (req, res) => {
+      const courseId = req.body._id; //receives id from request body
       db.collection('messages')
-      .findOneAndUpdate({userNameDB: req.body.userName, courseNameDB: req.body.courseName, instructorNameDB: req.body.instructorName, courseLengthDB: req.body.courseLength, notesDB: req.body.notes, completionStatusDB: req.body.completionStatus}, {
-        $set: {
-          thumbUpDB:req.body.thumbUp + 1
+      .findOneAndUpdate({ _id: ObjectId(courseId) }, {
+        $inc: {
+          thumbUpDB: 1
         }
       }, {
         sort: {_id: -1},
@@ -53,10 +55,29 @@ module.exports = function(app, passport, db) {
     })
 
     app.put('/downVote', (req, res) => {
+      const courseId = req.body._id; //receives id from request body
       db.collection('messages')
-      .findOneAndUpdate({userNameDB: req.body.userName, courseNameDB: req.body.courseName, instructorNameDB: req.body.instructorName, courseLengthDB: req.body.courseLength, notesDB: req.body.notes, completionStatusDB: req.body.completionStatus}, {
+      .findOneAndUpdate({ _id: ObjectId(courseId)}, {
+        $inc: {
+          thumbUpDB: -1
+        }
+      }, {
+        sort: {_id: -1},
+        upsert: false
+      }, (err, result) => {
+        if (err) return res.send(err)
+        res.send(result)
+      })
+    })
+
+    app.put('/newNotes', (req, res) => {
+      // const courseId = req.body._id; //receives id from request body
+      // _id: ObjectId(courseId) another option for findOneAndUpdate
+      console.log(req.body, "this is the request body")
+      db.collection('messages')
+      .findOneAndUpdate({ notesDB: req.body.notes }, {
         $set: {
-          thumbUpDB:req.body.thumbUp - 1
+          notesDB: req.body.newNotes
         }
       }, {
         sort: {_id: -1},
@@ -68,7 +89,8 @@ module.exports = function(app, passport, db) {
     })
 
     app.delete('/messages', (req, res) => {
-      db.collection('messages').findOneAndDelete({userNameDB: req.body.userName, courseNameDB: req.body.courseName, instructorNameDB: req.body.instructorName, courseLengthDB: req.body.courseLength, notesDB: req.body.notes, completionStatusDB: req.body.completionStatus, thumbUpDB: parseInt(req.body.thumbUp)}, (err, result) => {
+      const courseId = req.body._id; //receives id from request body
+      db.collection('messages').findOneAndDelete({ _id: ObjectId(courseId)}, (err, result) => {
         if (err) return res.send(500, err)
         console.log(result);
         res.send('Message deleted!')
